@@ -64,6 +64,11 @@ function sns_transport(options) {
   function lambda_handler(event, context, callback) {
     let msg = event.Records[0].Sns.Message
     handle_msg(msg, function (err, out) {
+      const res = {
+        statusCode: err ? 500 : 200,
+        body: JSON.stringify(err || out),
+      }
+
       callback(err, out)
     })
   }
