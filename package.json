@@ -1,0 +1,31 @@
+{
+  "name": "@seneca/sns-transport",
+  "version": "0.0.1",
+  "description": "Seneca transport for AWS SNS",
+  "main": "sns-transport.js",
+  "scripts": {
+    "test": "node test/happy.js",
+    "prettier": "prettier --write --no-semi --single-quote *.js test/*.js",
+    "reset": "npm run clean && npm i && npm test",
+    "clean": "rm -rf node_modules package-lock.json yarn.lock",
+    "repo-tag": "REPO_VERSION=`node -e \"console.log(require('./package').version)\"` && echo TAG: v$REPO_VERSION && git commit -a -m v$REPO_VERSION && git push && git tag v$REPO_VERSION && git push --tags;",
+    "repo-publish": "npm run clean && npm i --registry=http://registry.npmjs.org && npm run repo-publish-quick",
+    "repo-publish-quick": "npm run prettier && npm test && npm run repo-tag && npm publish --access public --registry=http://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/senecajs/seneca-sns-transport.git"
+  },
+  "author": "Richard Rodger (http://richardrodger.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/senecajs/seneca-sns-transport/issues"
+  },
+  "homepage": "https://github.com/senecajs/seneca-sns-transport#readme",
+  "dependencies": {
+    "@hapi/code": "^8.0.3",
+    "@hapi/lab": "^24.2.1",
+    "prettier": "^2.3.1",
+    "seneca": "^3.23.3"
+  }
+}
