@@ -1,6 +1,6 @@
 {
   "name": "@seneca/sns-transport",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Seneca transport for AWS SNS",
   "main": "sns-transport.js",
   "scripts": {
