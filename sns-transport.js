@@ -5,11 +5,11 @@ module.exports.defaults = {
     prefix: '',
     suffix: '',
   },
-  SNS: {
+  SNS: () => ({
     publish: () => {
       console.error('PROVIDE AWS SNS API')
     },
-  },
+  }),
 }
 
 function sns_transport(options) {
@@ -41,7 +41,7 @@ function sns_transport(options) {
 
     function send_msg(msg, reply, meta) {
       var msgstr = JSON.stringify(tu.externalize_msg(seneca, msg, meta))
-      options.SNS.publish(
+      options.SNS().publish(
         {
           Message: msgstr,
           TopicArn: resolve_topic(msg, meta),

@@ -4,12 +4,12 @@ const seneca = Seneca({ legacy: false })
   .test()
   .use('..', {
     prefix: 'foo:',
-    SNS: {
+    SNS: () => ({
       publish: function (args, done) {
         console.log('PUBLISH', args)
         done()
       },
-    },
+    }),
   })
   .add('role:foo', function (msg, done) {
     console.log('IN:', msg)
