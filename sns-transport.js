@@ -47,7 +47,7 @@ function sns_transport(options) {
           TopicArn: resolve_topic(msg, meta),
         },
         function (err, out) {
-          console.log('SENT', msgstr, err, out)
+          seneca.log.debug('SENT', msgstr, err, out)
         }
       )
 
@@ -63,10 +63,10 @@ function sns_transport(options) {
 
   function lambda_handler(event, context, callback) {
     let msg = event.Records[0].Sns.Message
-    handle_msg(msg, function (msgstr) {
+    handle_msg(msg, function (repstr) {
       const res = {
         statusCode: 200,
-        body: msgstr,
+        body: repstr,
       }
 
       callback(null, res)
