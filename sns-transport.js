@@ -62,7 +62,8 @@ function sns_transport(options) {
   }
 
   function lambda_handler(event, context, callback) {
-    let msg = event.Records[0].Sns.Message
+    let msg = event.Records ? event.Records[0].Sns.Message : event
+
     handle_msg(msg, function (repstr) {
       const res = {
         statusCode: 200,
