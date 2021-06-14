@@ -71,7 +71,7 @@ function sns_transport(options) {
   function lambda_handler(event, context, callback) {
     let msg = event.Records
       ? event.Records[0].Sns.Message
-      : event.routekey
+      : event.routeKey
       ? { ...event.queryStringParameters, ...event.pathParameters }
       : event
 
