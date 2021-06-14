@@ -25,7 +25,10 @@ function sns_transport(options) {
     var seneca = this.root.delegate()
 
     handle_msg = function handle_msg(data, done) {
-      var msg = tu.internalize_msg(seneca, JSON.parse(data))
+      var msg = tu.internalize_msg(
+        seneca,
+        'string' === typeof data ? JSON.parse(data) : data
+      )
 
       seneca.act(msg, function (err, out, meta) {
         var rep = JSON.stringify(tu.externalize_reply(seneca, err, out, meta))
@@ -86,7 +89,22 @@ function sns_transport(options) {
   return {
     name: 'sns-transport',
     exportmap: {
-      handler: lambda_handler,
+      lambda_handler: lambda_handler,
+    },
+  }
+}
+
+sns_transport.preload = function (plugin) {
+  let seneca = this.root
+  return {
+    name: 'sns-transport',
+    exportmap: {
+      handler: function sns_handler(event, context, callback) {
+        seneca.ready(function () {
+          let handler = seneca.export('sns-transport/lambda_handler')
+          return handler(event, context, callback)
+        })
+      },
     },
   }
 }
