@@ -78,6 +78,9 @@ function sns_transport(options) {
     handle_msg(msg, function (repstr) {
       const res = {
         statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*', // TODO: option!
+        },
         body: repstr,
       }
 
