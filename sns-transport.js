@@ -1,20 +1,44 @@
 module.exports = sns_transport
 
+// Default for the SNS option: a client whose publish only warns.
+// Keep the function name lower case. Seneca 4 validates options with
+// shape, which reads a default function whose name starts with a capital
+// letter (an arrow function under the key SNS is named SNS) as a required
+// class instance, so the plugin would not load.
+function default_sns() {
+  return {
+    publish: () => {
+      console.error('PROVIDE AWS SNS API')
+    },
+  }
+}
+
 module.exports.defaults = {
   topic: {
     prefix: '',
     suffix: '',
   },
-  SNS: () => ({
-    publish: () => {
-      console.error('PROVIDE AWS SNS API')
-    },
-  }),
+  SNS: default_sns,
 }
 
 function sns_transport(options) {
   const seneca = this
+
+  // Seneca 4 core provides these helpers; @seneca/transport 9 keeps them
+  // when it replaces the export. seneca-transport 8 and older do not.
   const tu = seneca.export('transport/utils')
+  if (
+    null == tu ||
+    'function' !== typeof tu.internalize_msg ||
+    'function' !== typeof tu.externalize_msg ||
+    'function' !== typeof tu.externalize_reply
+  ) {
+    throw new Error(
+      'sns-transport: the transport/utils export has no internalize_msg, ' +
+        'externalize_msg and externalize_reply; use Seneca 4, and ' +
+        '@seneca/transport 9 or later instead of seneca-transport'
+    )
+  }
 
   seneca.add('role:transport,hook:listen,type:sns', hook_listen_sns)
   seneca.add('role:transport,hook:client,type:sns', hook_client_sns)
